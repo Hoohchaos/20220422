@@ -151,6 +151,14 @@ def autocorrect(typed_word, valid_words, diff_function, limit):
     """
     # BEGIN PROBLEM 5
     "*** YOUR CODE HERE ***"
+    if typed_word in valid_words:
+        return typed_word
+    else:
+        valid_word = min(valid_words, key= lambda word: diff_function(typed_word, word, limit))
+        if diff_function(typed_word, valid_word, limit) > limit:
+            return typed_word
+        else:
+            return valid_word
     # END PROBLEM 5
 
 
@@ -177,7 +185,15 @@ def feline_flips(start, goal, limit):
     5
     """
     # BEGIN PROBLEM 6
-    assert False, 'Remove this line'
+    #assert False, 'Remove this line'
+    if limit < 0:   #大于limit马上返回，不再调用递归
+        return 0
+    elif start == "" or goal == "":   #如果加上这个后大于limit，只要一个步骤
+        return abs(len(goal) - len(start))
+    elif start[0] == goal[0]:
+        return feline_flips(start[1:], goal[1:], limit)
+    elif start[0] != goal[0]:
+        return 1 + feline_flips(start[1:], goal[1:], limit-1)
     # END PROBLEM 6
 
 
@@ -198,24 +214,31 @@ def minimum_mewtations(start, goal, limit):
     >>> minimum_mewtations("ckiteus", "kittens", big_limit) # ckiteus -> kiteus -> kitteus -> kittens
     3
     """
-    assert False, 'Remove this line'
-
-    if ______________:  # Fill in the condition
+    #assert False, 'Remove this line'
+    if start == goal:
+        return 0
+    elif start=="" or goal=="":  # Fill in the condition
         # BEGIN
         "*** YOUR CODE HERE ***"
+        return max(len(start), len(goal))
         # END
+    elif limit == 0:
+        return int(start!=goal)
+    
 
-    elif ___________:  # Feel free to remove or add additional cases
+    elif start[0] == goal[0]:  # Feel free to remove or add additional cases
         # BEGIN
         "*** YOUR CODE HERE ***"
+        return minimum_mewtations(start[1:], goal[1:], limit)
         # END
 
     else:
-        add = ...  # Fill in these lines
-        remove = ...
-        substitute = ...
+        add = 1 + minimum_mewtations(start, goal[1:], limit-1)  # Fill in these lines
+        remove = 1 + minimum_mewtations(start[1:], goal, limit-1)
+        substitute = 1 + minimum_mewtations(start[1:], goal[1:], limit-1)
         # BEGIN
         "*** YOUR CODE HERE ***"
+        return min(add, remove, substitute)
         # END
 
 
@@ -258,6 +281,13 @@ def report_progress(sofar, prompt, user_id, upload):
     """
     # BEGIN PROBLEM 8
     "*** YOUR CODE HERE ***"
+    i, k = 0, 0
+    while i < len(sofar) and sofar[i] == prompt[i]:
+        k += 1
+        i += 1
+    progress = k / len(prompt)
+    upload({'id': user_id, 'progress': progress})
+    return progress  
     # END PROBLEM 8
 
 
@@ -280,6 +310,8 @@ def time_per_word(words, times_per_player):
     """
     # BEGIN PROBLEM 9
     "*** YOUR CODE HERE ***"
+    times = [[t[i+1]-t[i] for i in range(len(t)-1)] for t in times_per_player]
+    return match(words, times)
     # END PROBLEM 9
 
 
@@ -302,6 +334,11 @@ def fastest_words(match):
     word_indices = range(len(get_words(match)))    # contains an *index* for each word
     # BEGIN PROBLEM 10
     "*** YOUR CODE HERE ***"
+    words = [[] for i in player_indices]
+    for word in word_indices:
+        times = [time(match, j, word) for j in player_indices]
+        words[times.index(min(times))].append(word_at(match, word))
+    return words
     # END PROBLEM 10
 
 
@@ -353,7 +390,7 @@ def match_string(match):
     return "match(%s, %s)" % (match[0], match[1])
 
 
-enable_multiplayer = False  # Change to True when you're ready to race.
+enable_multiplayer = True  # Change to True when you're ready to race.
 
 ##########################
 # Command Line Interface #

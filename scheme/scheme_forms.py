@@ -132,6 +132,13 @@ def do_and_form(expressions, env):
     """
     # BEGIN PROBLEM 12
     "*** YOUR CODE HERE ***"
+    if expressions is nil:
+        return True
+    value = scheme_eval(expressions.first, env)
+    if is_scheme_false(value) or expressions.rest is nil:
+        return value
+    else:
+        return do_and_form(expressions.rest, env)
     # END PROBLEM 12
 
 
@@ -151,6 +158,13 @@ def do_or_form(expressions, env):
     """
     # BEGIN PROBLEM 12
     "*** YOUR CODE HERE ***"
+    if expressions is nil:
+        return False
+    value = scheme_eval(expressions.first, env)
+    if is_scheme_true(value) or expressions.rest is nil:
+        return value
+    else:
+        return do_or_form(expressions.rest, env)
     # END PROBLEM 12
 
 
@@ -172,6 +186,10 @@ def do_cond_form(expressions, env):
         if is_scheme_true(test):
             # BEGIN PROBLEM 13
             "*** YOUR CODE HERE ***"
+            if clause.rest is nil:
+                return test
+            else:
+                return eval_all(clause.rest, env)
             # END PROBLEM 13
         expressions = expressions.rest
 
@@ -198,6 +216,13 @@ def make_let_frame(bindings, env):
     names = values = nil
     # BEGIN PROBLEM 14
     "*** YOUR CODE HERE ***"
+    while bindings is not nil:
+        item = bindings.first
+        validate_form(item, 2, 2)
+        names = Pair(item.first, names)
+        values = Pair(eval_all(item.rest, env), values)
+        bindings = bindings.rest
+    validate_formals(names)
     # END PROBLEM 14
     return env.make_child_frame(names, values)
 
@@ -254,6 +279,7 @@ def do_mu_form(expressions, env):
     validate_formals(formals)
     # BEGIN PROBLEM 11
     "*** YOUR CODE HERE ***"
+    return MuProcedure(formals, expressions.rest)
     # END PROBLEM 11
 
 

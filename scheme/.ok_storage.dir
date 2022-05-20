@@ -8,3 +8,8 @@
 'Problem 8-correct', (3584, 70)
 'Problem 9-correct', (4096, 66)
 'Problem 10-correct', (4608, 66)
+'Problem 11-correct', (5120, 70)
+'Problem 12-correct', (5632, 70)
+'Problem 13-correct', (6144, 70)
+'Problem 14-correct', (6656, 70)
+'tests.scm-correct', (7168, 70)
